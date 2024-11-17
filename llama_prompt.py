@@ -33,5 +33,6 @@ def llama_prompt(prompt):
 
 if __name__ == "__main__":
     # For testing purposes
-    test_prompt = "This location has an annual average of 17.34 air temperature, 214.83 DNI and 186.17 GHI. VERY BRIEFLY, how much money and energy could one save by installing solar panels?"
+    test_prompt = "Annual averages of 18.38 air temperature, 226.29 DNI and 196.39 GHI. In less than 50 words, how much money and energy could one save with solar panels?"
+    #test_prompt = "This location has an annual average of 18.38 air temperature, 226.29 DNI and 196.39 GHI. How much money and energy could one save by installing solar panels?"
     print(llama_prompt(test_prompt))

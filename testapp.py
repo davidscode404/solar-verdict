@@ -28,8 +28,9 @@ def update_averages():
     st.session_state.ghi_avg = ghi.mean()
     
     # Create the prompt with the current averages
-    prompt = f"This location has an annual average of {st.session_state.air_temp_avg:.2f} air temperature, {st.session_state.dni_avg:.2f} DNI and {st.session_state.ghi_avg:.2f} GHI. How much money and energy could one save by installing solar panels?"
-    
+    prompt = "Annual averages of 18.38 air temperature, 226.29 DNI and 196.39 GHI. In less than 50 words, Are solar panels worth it? How much money and energy could one save with solar panels?"
+    #prompt = f"This location has an annual average of {st.session_state.air_temp_avg:.2f} air temperature, {st.session_state.dni_avg:.2f} DNI and {st.session_state.ghi_avg:.2f} GHI. How much money and energy could one save by installing solar panels?"
+
     try:
         # Get AI response using llama_prompt
         response = llama_prompt(prompt)  # Modified to accept prompt as parameter
@@ -52,8 +53,22 @@ def reset_all():
     st.session_state.ghi_avg = 0
     st.session_state.map_location = None
 
-st.set_page_config(layout="wide")
-st.write("### SolarVerdict")
+st.set_page_config(
+    page_title="SolarVerdict",
+    layout="wide",
+    page_icon="🌐")
+#st.write("### SolarVerdict")
+st.markdown("""
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Teko:wght@300&display=swap');
+        .custom-font {
+            font-family: 'Roboto', sans-serif;
+            font-size: 28px;
+            font-weight: 300;
+        }
+    </style>
+    <div class='custom-font'>SolarVerdict</div>
+""", unsafe_allow_html=True)
 col1, col2 = st.columns([1, 1])
 
 with col1:
@@ -63,21 +78,20 @@ with col1:
     <div style="position: absolute; top: 50px; left: 50px; z-index: 1;">
     """, unsafe_allow_html=True)
     
-    # Create a row for the buttons using columns
-    button_col1, button_col2 = st.columns(2)
-    
-    # Add the buttons in separate columns
-    with button_col1:
-        st.button("🇦🇺", on_click=update_averages)
-    with button_col2:
-        st.button("Reset", on_click=reset_all, type="secondary")
-    
     # Close the positioning div
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Add the image
     st.image("world.png", width=600)
     st.markdown("</div>", unsafe_allow_html=True)
+    # Create a row for the buttons using columns
+    button_col1, button_col2 = st.columns(2)
+    
+    # Add the buttons in separate columns
+    with button_col1:
+        st.button("▶️", on_click=update_averages)
+    with button_col2:
+        st.button("🔁", on_click=reset_all, type="secondary")
 
 with col2:
     # Only show map if location is set
@@ -96,28 +110,21 @@ with col2:
         )
 
 # Add the message box between maps and averages
-st.text_area("AI Consultant 🤖", value=st.session_state.message, height=100, disabled=True)
+st.text_area("AI Consultant 🤖", value=st.session_state.message, height=200, disabled=True, label_visibility="visible", help="With these annual average air temperature, DNI and GHI values, how much money and energy could one save by installing solar panels?")
 
-one, two, three, four, five, six, seven, eight = st.columns(8)
-if one.button("1", use_container_width=True):
-    update_averages()  # Call the same function as the Australia button
-if two.button("2", use_container_width=True):
-    two.markdown("2")
-if three.button("3", use_container_width=True):
-    three.markdown("3")
-if four.button("4", use_container_width=True):
-    four.markdown("4")
-if five.button("5", use_container_width=True):
-    five.markdown("5")
-if six.button("6", use_container_width=True):
-    six.markdown("6")
-if seven.button("7", use_container_width=True):
-    seven.markdown("7")
-if eight.button("8", use_container_width=True):
-    eight.markdown("8")
-
-st.write("### Annual Average:")
+st.write("### Averages:")
 air_temp, dni, ghi = st.columns(3)
-air_temp.metric(label="Air Temperature", value=f"{st.session_state.air_temp_avg:,.2f}")
-dni.metric(label="DNI (Direct Normal Irradiance)", value=f"{st.session_state.dni_avg:,.0f}")
-ghi.metric(label="GHI (Global Horizontal Irradiance)", value=f"{st.session_state.ghi_avg:,.0f}")
+air_temp.metric(
+    label="Air Temperature (°C)", 
+    value=f"{st.session_state.air_temp_avg:,.2f}"
+)
+dni.metric(
+    label=":information_source: DNI (Direct Normal Irradiance)", 
+    value=f"{st.session_state.dni_avg:,.0f}",
+    help="Direct Normal Irradiance (DNI) is the amount of solar radiation received per unit area by a surface that is always held perpendicular to the rays that come in a straight line from the direction of the sun."
+)
+ghi.metric(
+    label=":information_source: GHI (Global Horizontal Irradiance)", 
+    value=f"{st.session_state.ghi_avg:,.0f}",
+    help="Global Horizontal Irradiance (GHI) is the total amount of shortwave radiation received from above by a surface horizontal to the ground, including both direct and diffuse solar radiation."
+)
